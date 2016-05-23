@@ -3,8 +3,11 @@ package com.liuawei.httpclient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -34,9 +37,16 @@ public class HTTPUtil {
 	/** HTTP 状态码*/
 	public static int HTTP_STATUS_OK = 200;
 	
+	/** 返回结果 --字符串*/
+	public static int RESULT_STRING = 1;
+	/** 返回结果 --文件流*/
+	public static int RESULT_STREAM = 2;
 	
-	/*
-	 * 获取HTTPClient
+	
+	/**
+	 * 获取HTTPClient 
+	 * @param connectionType -- 连接方式
+	 * @return
 	 */
 	public static HttpClient getHTTPClient(int connectionType){
 		switch(connectionType){
@@ -48,10 +58,50 @@ public class HTTPUtil {
 	}
 
 	/**
-	 * get 请求
-	 * @return 
+	 * 默认请求方式 ，不带参数
+	 * @param url
+	 * @return String
 	 */
-	public static String doGet(String url,int connectionType,Map<String, Object> params){
+	public static String doGet(String url){
+		return (String) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,new HashMap<String,Object>(),HTTPUtil.RESULT_STRING);
+	}
+	
+	/**
+	 * 默认请求方式 ，带参数
+	 * @param url
+	 * @return String
+	 */
+	public static String doGet(String url,Map<String, Object> params){
+		return (String) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,params,HTTPUtil.RESULT_STRING);
+	}
+	
+	/**
+	 * 默认请求方式 ，带参数,获取流
+	 * @param url
+	 * @return String
+	 */
+	public static InputStream doGetStream(String url){
+		return (InputStream) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,new HashMap<String,Object>(),HTTPUtil.RESULT_STREAM);
+	}
+	
+	/**
+	 * 默认请求方式 ，带参数,获取流
+	 * @param url
+	 * @return String
+	 */
+	public static InputStream doGetStream(String url,Map<String, Object> params){
+		return (InputStream) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,params,HTTPUtil.RESULT_STREAM);
+	}
+
+	/**
+	 * get请求
+	 * @param url
+	 * @param connectionType
+	 * @param params
+	 * @param resultForm
+	 * @return
+	 */
+	public static Object doGet(String url,int connectionType,Map<String, Object> params,int resultForm){
 		String apiUrl=url;
 		StringBuffer param = new StringBuffer();
 		int i = 0;
@@ -73,56 +123,13 @@ public class HTTPUtil {
 			if(statusCode == HTTP_STATUS_OK){
 				HttpEntity httpEntity = response.getEntity();
 				if(httpEntity != null){
-					System.out.println(httpEntity.getContent());
-					System.out.println(response.getEntity().toString());
-					result = IOUtils.toString(httpEntity.getContent(), "UTF-8");
+					if(resultForm==HTTPUtil.RESULT_STREAM){
+						return httpEntity.getContent();
+					}else{
+						result = IOUtils.toString(httpEntity.getContent(), "UTF-8");
+					}
 				}else{
-					// 请求失败
-				}
-			}else{
-				// 请求失败
-			}
-		}catch(ClientProtocolException e){
-			e.printStackTrace();
-		}catch(IOException e){
-			e.printStackTrace();
-		}finally{
-			try{
-				httpClient.close();
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	/*
-	 * get 文件请求
-	 */
-	public static InputStream doGetWithFile(String url,int connectionType,Map<String, Object> params){
-		String apiUrl="";
-		StringBuffer param = new StringBuffer();
-		int i = 0;
-		for(String key : params.keySet()){
-			if(i == 0)
-				param.append("?");
-			else
-				param.append("&");
-				param.append(key).append("=").append(params.get(key));
-				i++;
-		}
-		apiUrl += param;  
-		InputStream result = null;
-		CloseableHttpResponse response = null;
-		CloseableHttpClient httpClient = (CloseableHttpClient) getHTTPClient(connectionType);
-		try{
-			HttpGet httpGet = new HttpGet(apiUrl);
-			response = httpClient.execute(httpGet);
-			int statusCode = response.getStatusLine().getStatusCode();
-			if(statusCode == HTTP_STATUS_OK){
-				HttpEntity httpEntity = response.getEntity();
-				if(httpEntity != null){
-					result = httpEntity.getContent();
+					// 请求无返回值
 				}
 			}
 		}catch(ClientProtocolException e){
@@ -131,7 +138,6 @@ public class HTTPUtil {
 			e.printStackTrace();
 		}finally{
 			try{
-				response.close();
 				httpClient.close();
 			}catch(IOException e){
 				e.printStackTrace();
