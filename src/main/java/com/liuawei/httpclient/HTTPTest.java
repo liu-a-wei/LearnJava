@@ -61,7 +61,7 @@ public class HTTPTest {
 		params2.put("sessionType", 2);
 		params2.put("text", 2);
 		params.put("token", "U166151463996963a052d61bcabc6416a215d403ed30790b");
-		String str4 = HTTPUtil.doPost("http://10.10.1.38:9021/p?service=prvdocchat&operation=sendSessionMessage", HTTPUtil.HTTP_CONNECTION_TYPE_COMMON, params2);
+		String str4 = HTTPUtil.doPost("http://10.10.1.38:9021/p?service=prvdocchat&operation=sendSessionMessage", params2);
 		System.out.println(str4);
 	}
 

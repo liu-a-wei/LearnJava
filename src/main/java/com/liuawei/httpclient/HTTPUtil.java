@@ -1,7 +1,9 @@
 package com.liuawei.httpclient;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,13 +21,20 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.FormBodyPart;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 public class HTTPUtil {
+	
 	/** 普通的连接方式*/
 	public static int HTTP_CONNECTION_TYPE_COMMON = 1;
 	/** SSL 方式*/
@@ -41,6 +50,17 @@ public class HTTPUtil {
 	public static int RESULT_STRING = 1;
 	/** 返回结果 --文件流*/
 	public static int RESULT_STREAM = 2;
+	
+	/** 参数类型--xml*/
+	public static int PARAMTYPE_XML = 1;
+	/** 参数类型 --json*/
+	public static int PARAMTYPE_JSON = 2;
+	/** 参数类型 --map*/
+	public static int PARAMTYPE_MAP = 3;
+	/** 参数类型 --file*/
+	public static int PARAMTYPE_FILE = 4;
+	
+	
 	
 	
 	/**
@@ -118,6 +138,7 @@ public class HTTPUtil {
 		CloseableHttpClient httpClient = (CloseableHttpClient) getHTTPClient(connectionType);
 		try{
 			HttpGet httpGet = new HttpGet(apiUrl);
+			httpGet.setHeader("Content-Type", "text/html; charset=UTF-8");
 			HttpResponse response = httpClient.execute(httpGet);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if(statusCode == HTTP_STATUS_OK){
@@ -126,7 +147,7 @@ public class HTTPUtil {
 					if(resultForm==HTTPUtil.RESULT_STREAM){
 						return httpEntity.getContent();
 					}else{
-						result = IOUtils.toString(httpEntity.getContent(), "UTF-8");
+						result = EntityUtils.toString(httpEntity,"UTF-8");
 					}
 				}else{
 					// 请求无返回值
@@ -147,25 +168,87 @@ public class HTTPUtil {
 	}
 	
 	/**
+	 * 默认请求方式 ，提交json数据
+	 * @param url
+	 * @param json
+	 * @return
+	 */
+	public static String doPostJson(String url,Object json) {
+		return doPost(url, HTTPUtil.HTTP_CONNECTION_TYPE_COMMON, json,HTTPUtil.PARAMTYPE_JSON);
+	}
+	/**
+	 * 默认请求方式 ，提交xml数据
+	 * @param url
+	 * @param xml
+	 * @return
+	 */
+	public static String doPostXML(String url,String xml) {
+		return doPost(url, HTTPUtil.HTTP_CONNECTION_TYPE_COMMON, xml,HTTPUtil.PARAMTYPE_XML);
+	}
+	
+	/**
+	 * 默认请求方式 ，数据以key-value键值对存储
+	 * @param url
+	 * @param params
+	 * @return
+	 */
+	public static String doPost(String url,Map<String, Object> params) {
+		return doPost(url, HTTPUtil.HTTP_CONNECTION_TYPE_COMMON, params,HTTPUtil.PARAMTYPE_MAP);
+	}
+	/**
+	 * 默认请求方式 ，数据以key-value键值对存储
+	 * @param url
+	 * @param params
+	 * @return
+	 */
+	public static String doPostStream(String url,Map<String, Object> params) {
+		return doPost(url, HTTPUtil.HTTP_CONNECTION_TYPE_COMMON, params,HTTPUtil.PARAMTYPE_FILE);
+	}
+	
+	/**
+	 * 默认请求方式 ，上传Multipart
+	 * @param url
+	 * @param params -- text
+	 * @param fileParams -- file
+	 * @return
+	 */
+	public static String doPostMultipart(String url,Map<String, String> params,Map<String, String> fileParams) {
+		return doPostMultipart(url, HTTPUtil.HTTP_CONNECTION_TYPE_COMMON, params,fileParams);
+	}
+	/**
 	 * post 请求
 	 * @param url
 	 * @param connectionType
 	 * @param params key-value 键值对
+	 * @param paramType 参数类型
 	 * @return
 	 */
-	public static String doPost(String url,int connectionType,Map<String, Object> params){
+	public static String doPost(String url,int connectionType,Map<String, Object> params,int paramType){
 		String result = null;
 		CloseableHttpResponse response = null;
 		CloseableHttpClient httpClient = (CloseableHttpClient) getHTTPClient(connectionType); 
 		HttpPost httpPost = new HttpPost(url);
 		try{
-			List<NameValuePair> paramList = new ArrayList<>();
-			NameValuePair pair = null;
-			for(Map.Entry<String, Object> entry : params.entrySet()){
-				pair = new BasicNameValuePair(entry.getKey(), entry.getKey());
-				paramList.add(pair);
+			if(paramType==HTTPUtil.PARAMTYPE_MAP){
+				List<NameValuePair> paramList = new ArrayList<>();
+				NameValuePair pair = null;
+				for(Map.Entry<String, Object> entry : params.entrySet()){
+					pair = new BasicNameValuePair(entry.getKey(), entry.getKey());
+					paramList.add(pair);
+				}
+				httpPost.setEntity(new UrlEncodedFormEntity(paramList,"UTF-8"));
+			}else if(paramType==HTTPUtil.PARAMTYPE_FILE) {
+				MultipartEntityBuilder  meb = MultipartEntityBuilder.create();
+				for(Map.Entry<String, Object> entry : params.entrySet()){
+					meb.addBinaryBody(entry.getKey(), new File((String)entry.getValue()));
+				}
+				meb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+				HttpEntity entity = meb.build();
+				httpPost.setEntity(entity);
+			}else{
+				// 无效的参数
 			}
-			httpPost.setEntity(new UrlEncodedFormEntity(paramList));
+			httpPost.setHeader("Content-Type", "text/html; charset=UTF-8");
 			response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if(statusCode == HTTP_STATUS_OK){
@@ -186,14 +269,16 @@ public class HTTPUtil {
 		}
 		return result;
 	}
+
 	/**
 	 * post 请求
 	 * @param url
 	 * @param connectionType
-	 * @param params json值
+	 * @param params 
+	 * @param paramType 参数类型
 	 * @return
 	 */
-	public static String doPost(String url,int connectionType,Object params){
+	public static String doPost(String url,int connectionType,Object params,int paramType){
 		String result = null;
 		CloseableHttpResponse response = null;
 		CloseableHttpClient httpClient = (CloseableHttpClient) getHTTPClient(connectionType); 
@@ -201,7 +286,11 @@ public class HTTPUtil {
 		try{
 			StringEntity str  = new StringEntity(params.toString(), "UTF-8");
 			str.setContentEncoding("UTF-8");
-			str.setContentType("application/json");
+			if(paramType==HTTPUtil.PARAMTYPE_XML){
+				str.setContentType("application/json");
+			}else if(paramType==HTTPUtil.PARAMTYPE_JSON){
+				str.setContentType("application/json");
+			}
 			httpPost.setEntity(str);
 			response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -227,29 +316,38 @@ public class HTTPUtil {
 	 * post 请求
 	 * @param url
 	 * @param connectionType
-	 * @param params json值
+	 * @param params key-value 键值对
+	 * @param paramType 参数类型
 	 * @return
 	 */
-	public static String doPost(String url,int connectionType,String xml){
+	public static String doPostMultipart(String url,int connectionType,Map<String, String> params,Map<String, String> fileParams){
 		String result = null;
 		CloseableHttpResponse response = null;
 		CloseableHttpClient httpClient = (CloseableHttpClient) getHTTPClient(connectionType); 
 		HttpPost httpPost = new HttpPost(url);
-		try{
-			StringEntity str  = new StringEntity(xml.toString(), "UTF-8");
-			str.setContentEncoding("UTF-8");
-			str.setContentType("application/json");
-			httpPost.setEntity(str);
+		try {
+			MultipartEntityBuilder meb = MultipartEntityBuilder.create();
+			//text 参数拼接
+			for (Map.Entry<String, String> entry : params.entrySet()) {
+				meb.addTextBody(entry.getKey(), entry.getValue(), ContentType.DEFAULT_TEXT);
+			}
+			//binaray 参数拼接
+			for (Map.Entry<String, String> entry : fileParams.entrySet()) {
+				meb.addBinaryBody(entry.getKey(), new File(entry.getValue()));
+			}
+			meb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			HttpEntity entity = meb.build();
+			httpPost.setEntity(entity);
 			response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
-			if(statusCode == HTTP_STATUS_OK){
+			if (statusCode == HTTP_STATUS_OK) {
 				HttpEntity httpEntity = response.getEntity();
-				if(httpEntity != null){
+				if (httpEntity != null) {
 					result = EntityUtils.toString(httpEntity);
 				}
 			}
 		}catch(Exception e){
-			
+			// TODO: handle exception
 		}finally {
 			try{
 				response.close();
@@ -260,29 +358,4 @@ public class HTTPUtil {
 		}
 		return result;
 	}
-	
-	/**
-	 * post 文件请求
-	 * @return 
-	 */
-	public static String doPostWithFile(String url,int connectionType,String paths){
-		String result = null;
-		CloseableHttpResponse response = null;
-		CloseableHttpClient httpClient = (CloseableHttpClient) getHTTPClient(connectionType); 
-		HttpPost httpPost = new HttpPost(url);
-		try{
-//			httpPost.
-		}catch(Exception e){
-			
-		}finally {
-			try{
-				response.close();
-				httpClient.close();
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-		}
-		return result;
-	}
-
 }
