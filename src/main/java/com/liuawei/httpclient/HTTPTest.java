@@ -10,14 +10,22 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import com.mysql.jdbc.Buffer;
 
 public class HTTPTest {
 
 	public static void main(String[] args) throws IOException {
 		//test get
+		/*
+		 * get 请求
+		 */
 		String str1 = HTTPUtil.doGet("http://10.10.1.38:9021/p?service=prvdocchat&operation=sessionMemberList&sessionId=13");
 		System.out.println(str1);
+		/*
+		 * get 请求  -- 带参数
+		 */
 		Map<String, Object> params = new HashMap<>();
 		params.put("service", "prvdocchat");
 		params.put("operation", "sessionMemberList");
@@ -25,44 +33,21 @@ public class HTTPTest {
 		params.put("token", "U166151463996963a052d61bcabc6416a215d403ed30790b");
 		String str2 = HTTPUtil.doGet("http://10.10.1.38:9021/p", params);
 		System.out.println(str2);
-		
-//		InputStream in = HTTPUtil.doGetStream("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=XaGbzU_p6h5Erq5mpqGfLey-tSDuhO2wlBff5ua7UXKrbmeMNZQkPGaQK-X5ggU6LO5EWWVXJrfIc4SNvzs1uW6nkMbipoomFGeG8mbsRbXiBJBzjLuoor6R5S6bdCXnDRCcAEAZNY&media_id=us6I_CBRsDD9_-FJhrc6q9LN4LyaiKEDMi-B6eCHX0ziz4Rb3CN8hZ2nrUgKSqpX");
-//		byte[]  buffer = new byte[1024];
-//		File file = new File("D:\\data\\yipeng");
-//		if(!file.exists()){
-//			file.mkdirs();
-//		}
-//		FileOutputStream  os  = new FileOutputStream(file.getPath()+"\\"+"\\test.jpeg");
-//		int readLine = 0;
-//		while((readLine=in.read(buffer))!=-1){
-//			os.write(buffer,0,readLine);
-//		}
-//		os.close();
-//		in.close();
+
 		/*
-		 * String isWexin = request.getParameter("isWexin");
-			if(isWexin.equals("1")){
-				// 微信端获取post参数
-				sessionId = request.getParameter("sessionId");
-				String sessionType = request.getParameter("sessionType");
-				if(StringUtil.isBlank(sessionId)&&sessionType.equals("1")){
-					sessionId = (String) JsonUtil.toMap((String)JsonUtil.toMap(createFreeConsultSession(clientId)).get("data")).get("sessionId");
-				}
-				text = request.getParameter("text");
-				String image = request.getParameter("images");
-				if(!StringUtil.isBlank(image)){
-					images = WeiXinHelperUtil.uploadPicture(image, clientId, 4, Constants.PREFIX_CHAT);
-				}
-			}
+		 * post 请求 参数
 		 */
 		HashMap<String, Object> params2 = new HashMap<>();
-		params2.put("isWexin", 1);
-		params2.put("sessionId", 15);
-		params2.put("sessionType", 2);
-		params2.put("text", 2);
-		params.put("token", "U166151463996963a052d61bcabc6416a215d403ed30790b");
-		String str4 = HTTPUtil.doPost("http://10.10.1.38:9021/p?service=prvdocchat&operation=sendSessionMessage", params2);
-		System.out.println(str4);
+		params2.put("sessionId", 1);
+		params2.put("msgType", 15);
+		// content:{"text":} 
+		params2.put("content", new JSONObject().put("text", "测试一下").toString());
+//		params.put("token", "");
+		String str3 = HTTPUtil.doPost("http://10.10.1.38:9021/p?service=prvdocchat&operation=sendSessionMessage&token=U166151463996963a052d61bcabc6416a215d403ed30790b", params2);
+		System.out.println(str3);
+		/*
+		 * post 请求 文件
+		 */
 	}
 
 }

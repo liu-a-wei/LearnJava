@@ -233,7 +233,7 @@ public class HTTPUtil {
 				List<NameValuePair> paramList = new ArrayList<>();
 				NameValuePair pair = null;
 				for(Map.Entry<String, Object> entry : params.entrySet()){
-					pair = new BasicNameValuePair(entry.getKey(), entry.getKey());
+					pair = new BasicNameValuePair(entry.getKey(),  entry.getValue().toString());
 					paramList.add(pair);
 				}
 				httpPost.setEntity(new UrlEncodedFormEntity(paramList,"UTF-8"));
@@ -248,7 +248,7 @@ public class HTTPUtil {
 			}else{
 				// 无效的参数
 			}
-			httpPost.setHeader("Content-Type", "text/html; charset=UTF-8");
+//			httpPost.setHeader("Content-Type", "text/html; charset=UTF-8");
 			response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if(statusCode == HTTP_STATUS_OK){
