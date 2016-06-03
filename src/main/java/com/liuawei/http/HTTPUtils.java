@@ -14,7 +14,7 @@ import java.util.Map;
 public class HTTPUtils {
 	
 	/**
-	 * 鍙戦�乬et璇锋眰
+	 * 发送get请求
 	 * @param url
 	 * @param paramers
 	 * @return 
@@ -25,9 +25,9 @@ public class HTTPUtils {
 		}
 		try {
 			URL reqUrl = new URL(url);
-			//1:閫氳繃鍦� URL 涓婅皟鐢� openConnection 鏂规硶鍒涘缓杩炴帴瀵硅薄銆�
+			//1:通过在 URL 上调用 openConnection 方法创建连接对象。
 			HttpURLConnection connection = (HttpURLConnection) reqUrl.openConnection();
-			//2:澶勭悊璁剧疆鍙傛暟鍜屼竴鑸姹傚睘鎬с��
+			//2:处理设置参数和一般请求属性。
 			connection.setRequestMethod("GET");
 			connection.setAllowUserInteraction(true);
 			connection.setDoInput(true);
@@ -36,9 +36,9 @@ public class HTTPUtils {
 			connection.setRequestProperty("Connection", "keep-alive");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 			connection.setRequestProperty("User-Agent:", "Mozilla/5.0 (Windows NT 6.1; WOW64)");
-			//3:浣跨敤 connect 鏂规硶寤虹珛鍒拌繙绋嬪璞＄殑瀹為檯杩炴帴銆�
+			//3:使用 connect 方法建立到远程对象的实际连接。
 			connection.connect();
-			// 4锛氳幏鍙栫粨鏋�
+			//4远程对象的头字段和内容变为
 			return result(connection);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -50,7 +50,7 @@ public class HTTPUtils {
 		return null;
 	}
 	/**
-	 * 鍙戦�丳OST璇锋眰
+	 * 发送post请求
 	 * @param url
 	 * @param paramers
 	 * @return
@@ -61,9 +61,7 @@ public class HTTPUtils {
 		}
 		try {
 			URL reqUrl = new URL(url);
-			//1:閫氳繃鍦� URL 涓婅皟鐢� openConnection 鏂规硶鍒涘缓杩炴帴瀵硅薄銆�
 			HttpURLConnection connection = (HttpURLConnection) reqUrl.openConnection();
-			//2:澶勭悊璁剧疆鍙傛暟鍜屼竴鑸姹傚睘鎬с��
 			connection.setRequestMethod("POST");
 			connection.setAllowUserInteraction(true);
 			connection.setDoInput(true);
@@ -73,10 +71,8 @@ public class HTTPUtils {
 			connection.setRequestProperty("Connection", "keep-alive");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 			connection.setRequestProperty("User-Agent:", "Mozilla/5.0 (Windows NT 6.1; WOW64)");
-			//3:浣跨敤 connect 鏂规硶寤虹珛鍒拌繙绋嬪璞＄殑瀹為檯杩炴帴銆�
 			connection.getOutputStream().write(paramers.getBytes());
 			connection.connect();
-			// 4锛氳幏鍙栫粨鏋�
 			return result(connection);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -88,9 +84,9 @@ public class HTTPUtils {
 		return null;
 	}
 	/**
-	 * 鎷兼帴璇锋眰鍙傛暟
+	 * 构建请求参数
 	 * @param str
-	 * @param flag -- 鏄惁闇�瑕侊紵鍙�
+	 * @param flag 
 	 * @return
 	 * @throws IOException
 	 */
@@ -105,7 +101,7 @@ public class HTTPUtils {
 		return flag==true?"?"+paramers.toString():paramers.toString();
 	}
 	/**
-	 * 杈撳嚭璇锋眰缁撴灉
+	 * 构建返回结果
 	 * @param connection
 	 * @return
 	 * @throws IOException

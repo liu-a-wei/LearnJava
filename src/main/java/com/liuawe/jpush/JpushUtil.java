@@ -51,14 +51,16 @@ public class JpushUtil {
 	 * @param msgContent
 	 * @return
 	 */
-	public static PushPayload build_android_alias_message(String alias, String title, HashMap< String, String> extras) {
-		return PushPayload.newBuilder().
-				setPlatform(Platform.android()).
-				setAudience(Audience.alias(alias)).
-				setNotification(Notification.newBuilder().
-						addPlatformNotification(AndroidNotification.newBuilder().
-								setTitle(title).build()).build())
-				.setMessage(Message.newBuilder().addExtras(extras).build()).build();
+	public static PushPayload build_android_alias_message(String alias,String alert, String title,
+ String pushType, HashMap<String, String> extras) {
+		return PushPayload.newBuilder()
+				.setPlatform(Platform.android())
+				.setAudience(Audience.alias(alias))
+				.setNotification(Notification.newBuilder()
+						.addPlatformNotification(AndroidNotification.newBuilder()
+								.setTitle(title).setAlert(alert).build()).build())
+				.setMessage(Message.newBuilder().setMsgContent(pushType)
+						.addExtras(extras).build()).build();
 	}
 	
 	/**
