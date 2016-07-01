@@ -2,6 +2,20 @@ import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 
 public class test {
 	public static void main(String[] args) {
+		
+		String msg = "ghgk.123.";
+		
+		System.out.println(msg.lastIndexOf("."));
+		
+		
+		
+		
+		
+		System.out.println("-------------------------------");
+		
+		
+		
+		
 		String str2 = ",0,,";
 		String[] arr2 = str2.split(",");
 		for(int i = 0; i < arr2.length; i++){
