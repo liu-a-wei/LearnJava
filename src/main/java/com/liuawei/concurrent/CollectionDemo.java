@@ -2,7 +2,7 @@ package com.liuawei.concurrent;
 
 import java.util.Vector;
 
-public class CollectionTest {
+public class CollectionDemo {
 	static Vector<Integer> vector = new Vector<Integer>();
     public static void main(String[] args) throws InterruptedException {
         while(true) {
@@ -10,7 +10,7 @@ public class CollectionTest {
                 vector.add(i);
             Thread thread1 = new Thread(){
                 public void run() {
-                    synchronized (CollectionTest.class) {   //进行额外的同步
+                    synchronized (CollectionDemo.class) {   //进行额外的同步
                         for(int i=0;i<vector.size();i++)
                             vector.remove(i);
                     }
@@ -18,7 +18,7 @@ public class CollectionTest {
             };
             Thread thread2 = new Thread(){
                 public void run() {
-                    synchronized (CollectionTest.class) {
+                    synchronized (CollectionDemo.class) {
                         for(int i=0;i<vector.size();i++)
                             vector.get(i);
                     }

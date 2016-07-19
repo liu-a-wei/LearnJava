@@ -3,7 +3,7 @@ package com.liuawei.concurrent;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class ProcessTest {
+public class ProcessDemo {
 
 	public static void main(String[] args) throws IOException {
 		processBuilderTest();

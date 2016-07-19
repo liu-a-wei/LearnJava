@@ -1,6 +1,6 @@
 package com.liuawei.concurrent;
 
-public class VoliateTest {
+public class VoliateDemo {
     public static void main(String[] args) {
         final SynTest synTest = new SynTest();
         for(int i=0;i<10;i++){

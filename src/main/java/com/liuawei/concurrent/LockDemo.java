@@ -4,7 +4,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-public class LockTest {
+public class LockDemo {
 
 	public static void main(String[] args) {
 		new Thread1().start();

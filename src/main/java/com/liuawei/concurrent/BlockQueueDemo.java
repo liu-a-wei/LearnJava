@@ -2,13 +2,13 @@ package com.liuawei.concurrent;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class BlockQueueTest {
+public class BlockQueueDemo {
 
 	private int queueSize = 10;
 	private ArrayBlockingQueue<Integer> queue = new ArrayBlockingQueue<Integer>(queueSize);
 
 	public static void main(String[] args) {
-		BlockQueueTest test = new BlockQueueTest();
+		BlockQueueDemo test = new BlockQueueDemo();
 		Consumer consumer = test.new Consumer();
 		consumer.start();
 		Producer producer = test.new Producer();
@@ -40,7 +40,6 @@ public class BlockQueueTest {
 			++i;
 			produce();
 		}
-
 		private void produce() {
 			while (true) {
 				try {

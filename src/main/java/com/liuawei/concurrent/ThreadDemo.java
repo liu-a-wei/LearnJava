@@ -1,6 +1,6 @@
 package com.liuawei.concurrent;
 
-public class ThreadTest extends Thread{
+public class ThreadDemo extends Thread{
 		
 	public static void main(String[] args){
 		testThread();
