@@ -1,4 +1,4 @@
-package com.liuawe.jpush;
+package com.liuawei.Jpush;
 
 
 
