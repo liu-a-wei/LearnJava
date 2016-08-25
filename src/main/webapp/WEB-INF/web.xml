@@ -4,4 +4,24 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+  	<servlet-name>authcode</servlet-name>
+  	<display-name>authcode</display-name>
+  	<description></description>
+  	<servlet-class>com.liuawei.web.authcode</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>Excel</servlet-name>
+  	<display-name>Excel</display-name>
+  	<description></description>
+  	<servlet-class>com.liuawei.web.Excel</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>authcode</servlet-name>
+  	<url-pattern>/authcode</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>Excel</servlet-name>
+  	<url-pattern>/Excel</url-pattern>
+  </servlet-mapping>
 </web-app>

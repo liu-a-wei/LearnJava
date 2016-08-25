@@ -2,8 +2,9 @@ package com.liuawei.token;
 
 import java.util.Random;
 
+import com.liuawei.util.encrypt.MD5Utils;
 
-import com.liuawei.encrypt.MD5Utils;
+
 
 public final class TokenUtil {
 	
