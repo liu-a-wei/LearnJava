@@ -9,6 +9,9 @@ public class Student {
 	private String name;
 	private String location;
 	private Time birthday;
+	public Student() {
+		super();
+	}
 	public Student(int id, double age, String name, String location, Time birthday) {
 		super();
 		this.id = id;

@@ -1,19 +1,22 @@
 package com.liuawei.util.json;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Random;
 
 public class test {
 
 	public static void main(String[] args) {
-		String tradeDate = "9.01我试一下";
-		int indexOf = tradeDate.lastIndexOf(".");
-		String regEx="[^0-9]";   
-		Pattern p = Pattern.compile(regEx);   
-		Matcher m = p.matcher(tradeDate);   
-		tradeDate = m.replaceAll("").trim();
-		tradeDate = tradeDate.substring(0, indexOf)+"月"+tradeDate.substring(indexOf)+"日";
-		System.out.println(tradeDate);
+//		Integer a = -129;
+//		Integer b = -129;
+//		System.out.println("值相等："+(a.intValue()==b.intValue()));
+//		System.out.println("引用相等："+(a==b));
+//		Integer c = 220;
+//		Integer d = 220;
+//		System.out.println("值相等："+(c.intValue()==d.intValue()));
+//		System.out.println("引用相等："+(c==d));
+		
+		for(int i = 0; i < 50; i++){
+			System.out.println(new Random().nextInt(100));
+		}
 	}
 
 }
