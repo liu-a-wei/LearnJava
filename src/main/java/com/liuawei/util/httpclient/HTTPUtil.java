@@ -3,15 +3,11 @@ package com.liuawei.util.httpclient;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -23,11 +19,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.FormBodyPart;
 import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -61,7 +54,7 @@ public class HTTPUtil {
 	public static int PARAMTYPE_FILE = 4;
 	
 	
-	
+	public static String DEFAULT_HEADER ="text/html; charset=UTF-8";
 	
 	/**
 	 * 获取HTTPClient 
@@ -83,7 +76,7 @@ public class HTTPUtil {
 	 * @return String
 	 */
 	public static String doGet(String url){
-		return (String) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,new HashMap<String,Object>(),HTTPUtil.RESULT_STRING);
+		return (String) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,new HashMap<String,Object>(),HTTPUtil.RESULT_STRING,DEFAULT_HEADER);
 	}
 	
 	/**
@@ -92,7 +85,7 @@ public class HTTPUtil {
 	 * @return String
 	 */
 	public static String doGet(String url,Map<String, Object> params){
-		return (String) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,params,HTTPUtil.RESULT_STRING);
+		return (String) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,params,HTTPUtil.RESULT_STRING,DEFAULT_HEADER);
 	}
 	
 	/**
@@ -101,7 +94,7 @@ public class HTTPUtil {
 	 * @return String
 	 */
 	public static InputStream doGetStream(String url){
-		return (InputStream) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,new HashMap<String,Object>(),HTTPUtil.RESULT_STREAM);
+		return (InputStream) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,new HashMap<String,Object>(),HTTPUtil.RESULT_STREAM,DEFAULT_HEADER);
 	}
 	
 	/**
@@ -110,7 +103,7 @@ public class HTTPUtil {
 	 * @return String
 	 */
 	public static InputStream doGetStream(String url,Map<String, Object> params){
-		return (InputStream) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,params,HTTPUtil.RESULT_STREAM);
+		return (InputStream) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,params,HTTPUtil.RESULT_STREAM,DEFAULT_HEADER);
 	}
 
 	/**
@@ -121,7 +114,7 @@ public class HTTPUtil {
 	 * @param resultForm
 	 * @return
 	 */
-	public static Object doGet(String url,int connectionType,Map<String, Object> params,int resultForm){
+	public static Object doGet(String url,int connectionType,Map<String, Object> params,int resultForm,String headers){
 		String apiUrl=url;
 		StringBuffer param = new StringBuffer();
 		int i = 0;
@@ -138,7 +131,7 @@ public class HTTPUtil {
 		CloseableHttpClient httpClient = (CloseableHttpClient) getHTTPClient(connectionType);
 		try{
 			HttpGet httpGet = new HttpGet(apiUrl);
-			httpGet.setHeader("Content-Type", "text/html; charset=UTF-8");
+			httpGet.setHeader( "Content-Type", headers);
 			HttpResponse response = httpClient.execute(httpGet);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if(statusCode == HTTP_STATUS_OK){
