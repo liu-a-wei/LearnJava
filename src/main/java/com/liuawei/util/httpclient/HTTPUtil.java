@@ -1,12 +1,15 @@
 package com.liuawei.util.httpclient;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -93,8 +96,8 @@ public class HTTPUtil {
 	 * @param url
 	 * @return String
 	 */
-	public static InputStream doGetStream(String url){
-		return (InputStream) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,new HashMap<String,Object>(),HTTPUtil.RESULT_STREAM,DEFAULT_HEADER);
+	public static byte[] doGetStream(String url){
+		return (byte[]) doGet(url,HTTPUtil.HTTP_CONNECTION_TYPE_COMMON,new HashMap<String,Object>(),HTTPUtil.RESULT_STREAM,DEFAULT_HEADER);
 	}
 	
 	/**
@@ -138,7 +141,16 @@ public class HTTPUtil {
 				HttpEntity httpEntity = response.getEntity();
 				if(httpEntity != null){
 					if(resultForm==HTTPUtil.RESULT_STREAM){
-						return httpEntity.getContent();
+						InputStream in = httpEntity.getContent();
+						byte[] buffer = new byte[1024];
+						int len = -1;
+						ByteArrayOutputStream fos = new ByteArrayOutputStream();
+						while((len = in.read(buffer)) != -1){
+							fos.write(buffer, 0, len);
+						}
+						fos.flush();
+						fos.close();
+						return fos.toByteArray();
 					}else{
 						result = EntityUtils.toString(httpEntity,"UTF-8");
 					}

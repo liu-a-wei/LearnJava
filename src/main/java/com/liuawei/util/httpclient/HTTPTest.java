@@ -16,7 +16,7 @@ public class HTTPTest {
 	 * 测试get请求--不带参数
 	 */
 	private static void testGet() {
-		String test = HTTPUtil.doGet("http://127.0.0.1:8080/eachrent/user/login");
+		String test = HTTPUtil.doGet("https://www.baidu.com/");
 		System.out.println(test);
 	}
 	/**
@@ -33,8 +33,8 @@ public class HTTPTest {
 	 * 测试get请求--获取文件流 -- 未测试通过
 	 */
 	private static void testGetStream() {
-		InputStream in = HTTPUtil.doGetStream("http://127.0.0.1:8080/eachrent/user/stream");
+		//InputStream in = HTTPUtil.doGetStream("http://127.0.0.1:8080/eachrent/user/stream");
 		
-		System.out.println(in);
+		//System.out.println(in);
 	}
 }
