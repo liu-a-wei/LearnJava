@@ -15,8 +15,14 @@ public class RunTimeDemo {
 		try {
 			Process process = run.exec("cmd");
 			System.out.println("执行命令!"+process.toString());
-			System.out.println("isAlive!"+process.isAlive());;
+			System.out.println("isAlive!"+process.isAlive());
+			process.waitFor();
+			process.destroy();
+			System.out.println("isAlive!"+process.isAlive());
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

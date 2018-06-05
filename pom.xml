@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.liuawei</groupId>
 	<artifactId>LearnJava</artifactId>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>LearnJava Maven </name>
 	<url>http://maven.apache.org</url>
