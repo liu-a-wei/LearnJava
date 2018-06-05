@@ -1,4 +1,4 @@
-package com.liuawei.token;
+package com.liuawei.util.token;
 
 import java.util.Random;
 

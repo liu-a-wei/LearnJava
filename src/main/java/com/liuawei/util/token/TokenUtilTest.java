@@ -1,6 +1,6 @@
-package com.liuawei.token;
+package com.liuawei.util.token;
 
-import com.liuawei.token.TokenUtil.Token;
+import com.liuawei.util.token.TokenUtil.Token;
 
 public class TokenUtilTest {
 	public static void main(String[] args){
