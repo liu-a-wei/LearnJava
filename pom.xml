@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.liuawei</groupId>
 	<artifactId>LearnJava</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>LearnJava Maven Webapp</name>
+	<name>LearnJava Maven </name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
 	

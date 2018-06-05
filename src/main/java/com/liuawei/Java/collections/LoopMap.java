@@ -32,6 +32,9 @@ public class LoopMap {
 		for (Map.Entry<String, Object> entry: map.entrySet()) {
 			 System.out.println("key="+entry.getKey()+"value="+entry.getValue());
 		}
+		
+	
+	
 	}
 
 }

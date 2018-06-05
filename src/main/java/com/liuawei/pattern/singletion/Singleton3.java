@@ -13,5 +13,4 @@ public class Singleton3 {
 	private static class Holader {
 		private  static Singleton3 instance = new Singleton3();
 	}
-	Runtime
 }
