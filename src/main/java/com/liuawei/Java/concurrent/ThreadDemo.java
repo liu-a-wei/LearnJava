@@ -11,6 +11,7 @@ public class ThreadDemo extends Thread{
 		System.out.println(Thread.currentThread().getId());
 		MyThread threadTest = new MyThread("testThread");
 		threadTest.start();
+		threadTest.start();
 		MyThread threadTes2 = new MyThread("testThread1");
 		threadTes2.run();
 		MyThread threadTes3 = new MyThread("testThread2");
