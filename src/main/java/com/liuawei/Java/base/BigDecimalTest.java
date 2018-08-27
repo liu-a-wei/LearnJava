@@ -1,12 +1,17 @@
 package com.liuawei.Java.base;
 
-import java.math.BigDecimal;
-
 public class BigDecimalTest {
 
 	public static void main(String[] args){
-		BigDecimal bigDecimal = new BigDecimal("1000").subtract(new BigDecimal("6")).divide(new BigDecimal("1000"));
-		System.out.println(bigDecimal.toString());
-		System.out.println(100f-2.5f);
+		// 1532569621
+		// 1532571097358
+		float f1 = +0.0f;
+		float f2 = -0.0f;
+		if(f1==f2){
+			System.out.println(f1==f2);
+		}
+		
+		;
+		System.out.println(Float.intBitsToFloat(0x7f800000));
 	}
 }

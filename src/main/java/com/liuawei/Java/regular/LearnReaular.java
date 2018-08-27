@@ -13,6 +13,12 @@ import java.util.regex.Pattern;
 public class LearnReaular {
 	public static void main(String[] args){
 		
+		String doubleStr = "123456789";
+		
+		
+		
+		
+		
 		boolean flag = false;
 		// 第一种方式
 		String reg = "";
