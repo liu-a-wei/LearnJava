@@ -1,62 +1,33 @@
 package com.liuawei.Java.base;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class RandomTest {
 
-	public static void main(String[] args) {
-		Random random2 = new Random();
-		for (int i = 0; i < 10; i++) {
-			System.out.println(random2.nextInt(2));
-		}
-		
-		
-		Integer i = 1;
-		int j = (int) (i.floatValue()/100);
-		System.out.println(j);
-		List<Student> list = new ArrayList<>();
-		Student student = null;
-		student = new Student("xliu1", 15);
-		list.add(student);
-		student = new Student("xliu2", 1);
-		list.add(student);
-		student = new Student("xliu3", 2);
-		list.add(student);
-		student = new Student("xliu4", 12);
-		list.add(student);
-		
-		int freeBase = (int) 250 / 100;
-		int temp = 0;
-		int left,right,prizeWeight;
-		List<Map<String, Object>> mapList = new ArrayList<>();
-		Map<String, Object> map = null;
-		for (Student student2 : list) {
-			//免单红包权重不处理
-			if (freeBase<=0) {
-				prizeWeight = student2.getAge();
-			}else{
-				prizeWeight = student2.getAge()*freeBase;
+	private static int calculateRedAmount(String configStr) {
+		String[] config = configStr.split(",");
+		List<Integer> redPool = new ArrayList<>();
+		String item;
+		int redAmount;
+		int redWegit;
+		for (int i = 0; i < config.length; i++) {
+			item = config[i];
+			redAmount = Integer.parseInt(item.split("-")[0]);
+			redWegit = Integer.parseInt(item.split("-")[1]);
+			for (int j = 0; j < redWegit; j++) {
+				redPool.add(redAmount);
 			}
-			left = temp;
-			right = left + prizeWeight -1;
-			temp = right;
-			map = new HashMap<>();
-			map.put("id", student2.getName());
-			map.put("interval", new Interval(left,right));
-			mapList.add(map);
-			++temp;
 		}
 		Random random = new Random();
-		int num = random.nextInt(temp);
-		Interval interval = null;
-		for (Map<String, Object> map2 : mapList) {
-			System.out.println(map2);
+		System.out.println(redPool.size());
+		return redPool.get(random.nextInt(redPool.size()));
+	}
+	public static void main(String[] args) {
+		for(int i=0;i<40;i++){
+			System.out.println(calculateRedAmount("50-11,60-5,70-3,80-1"));
 		}
-		System.out.println(temp);
 	}
 }
 
