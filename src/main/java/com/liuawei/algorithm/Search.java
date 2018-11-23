@@ -84,15 +84,15 @@ public class Search {
 		}
 		return -1;
 	}
-	
-	
+
 	/**
 	 * 找到第一个value的值
+	 * 
 	 * @param arr
 	 * @param value
 	 * @return
 	 */
-	public static int binarySearchFirst(int[] arr, int value){
+	public static int binarySearchFirst(int[] arr, int value) {
 		if (arr == null || arr.length == 0) {
 			return -1;
 		}
@@ -101,9 +101,9 @@ public class Search {
 		while (low <= hign) {
 			int middle = (low + hign) / 2;
 			if (arr[middle] == value) {
-				if ((middle==0)||(arr[middle-1]!=value)) {
+				if ((middle == 0) || (arr[middle - 1] != value)) {
 					return middle;
-				}else {
+				} else {
 					hign = middle - 1;
 				}
 			} else if (arr[middle] < value) {
@@ -114,16 +114,17 @@ public class Search {
 
 		}
 		return -1;
-	
+
 	}
-	
+
 	/**
 	 * 找到最后一个value的值
+	 * 
 	 * @param arr
 	 * @param value
 	 * @return
 	 */
-	public static int binarySearchLast(int[] arr, int value){
+	public static int binarySearchLast(int[] arr, int value) {
 		if (arr == null || arr.length == 0) {
 			return -1;
 		}
@@ -132,9 +133,9 @@ public class Search {
 		while (low <= hign) {
 			int middle = (low + hign) / 2;
 			if (arr[middle] == value) {
-				if ((middle==0)||(arr[middle+1]!=value)) {
+				if ((middle == arr.length - 1) || (arr[middle + 1] != value)) {
 					return middle;
-				}else {
+				} else {
 					low = middle + 1;
 				}
 			} else if (arr[middle] < value) {
@@ -145,17 +146,75 @@ public class Search {
 
 		}
 		return -1;
-	
+
 	}
-	
-	// 查找第一个大于等于给定值的元素
-	
-	
-	
+
+	/**
+	 * 查找第一个大于等于给定值的元素
+	 * 
+	 * @param arr
+	 * @param value
+	 * @return
+	 */
+	public static int binarySearchExt1(int[] arr, int value) {
+		if (arr == null || arr.length == 0) {
+			return -1;
+		}
+		int low = 0;
+		int hign = arr.length - 1;
+		while (low <= hign) {
+			int middle = (low + hign) / 2;
+			if (arr[middle] >= value) {
+				if ((middle == 0) || (arr[middle - 1] < value)) {
+					return middle;
+				} else {
+					hign = middle - 1;
+				}
+			} else {
+				low = middle + 1;
+			}
+
+		}
+		return -1;
+
+	}
+
+	/**
+	 * 查找最后一个小于等于给定值的元素
+	 * 
+	 * @param arr
+	 * @param value
+	 * @return
+	 */
+	public static int binarySearchExt2(int[] arr, int value) {
+		if (arr == null || arr.length == 0) {
+			return -1;
+		}
+		int low = 0;
+		int hign = arr.length - 1;
+		while (low <= hign) {
+			int middle = (low + hign) / 2;
+			if (arr[middle] > value) {
+				low = middle + 1;
+			} else {
+				if ((middle == arr.length - 1) || (arr[middle + 1] > value)) {
+					return middle;
+				} else {
+					hign = middle - 1;
+				}
+			}
+
+		}
+		return -1;
+
+	}
 
 	public static void main(String[] args) {
-		int[] arr = { 1, 3, 5, 6,6,6,7, 9, 12 };
+		int[] arr = { 1, 3, 5, 6, 7, 7, 8, 8, 9, 12 };
 		System.out.println(binarySearchFirst(arr, 6));
 		System.out.println(binarySearchLast(arr, 6));
+		System.out.println(binarySearchExt1(arr, 8));
+		System.out.println(binarySearchExt1(arr, 8));
+
 	}
 }
